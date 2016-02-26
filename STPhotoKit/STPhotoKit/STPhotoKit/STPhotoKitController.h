@@ -23,24 +23,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** 1.原始图片, 必须设置*/
 @property (nonatomic, strong) UIImage *imageOriginal;
-/** 2.修剪的尺寸,默认是 CGSizeMake(ScreenWidth, ScreenWidth) */
+/** 2.修剪的尺寸,默认是 CGSizeMake(ScreenWidth - STMarginBig, ScreenWidth - STMarginBig) */
 @property (nonatomic, assign) CGSize sizeCrop;
 
 @property (nullable, nonatomic, weak)id <STPhotoKitDelegate>delegate ;
 
 
-@property (nonatomic, assign) CGRect cropFrame;
 
-@property (nonatomic, retain) UIImage *editedImage;
-
-
-@property (nonatomic, retain) UIView *ratioView;
-
-@property (nonatomic, assign) CGRect oldFrame;
-@property (nonatomic, assign) CGRect largeFrame;
-@property (nonatomic, assign) CGFloat limitRatio;
-
-@property (nonatomic, assign) CGRect latestFrame;
 
 @end
 

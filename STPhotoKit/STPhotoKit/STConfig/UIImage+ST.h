@@ -11,8 +11,4 @@
 @interface UIImage (ST)
 
 + (UIImage *)imageByScalingToMaxSize:(UIImage *)sourceImage;
-
-//+ (UIImage *)imageByScalingToMaxSize:(UIImage *)sourceImage;
-
-//+ (UIImage *)imageByScalingAndCroppingForSourceImage:(UIImage *)sourceImage targetSize:(CGSize)targetSize;
 @end

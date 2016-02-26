@@ -69,5 +69,13 @@
  */
 @property (nonatomic) CGFloat right;
 
+/**
+ *  13.设置镂空中间的视图
+ *
+ *  @param centerFrame 中间镂空的框架
+ */
+- (void)setHollowWithCenterFrame:(CGRect)centerFrame;
+
+
 @end
 

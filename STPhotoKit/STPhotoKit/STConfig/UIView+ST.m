@@ -194,4 +194,16 @@
         return self;
     };
 }
+
+- (void)setHollowWithCenterFrame:(CGRect)centerFrame
+{
+    UIBezierPath *path = [UIBezierPath bezierPath];
+    [path appendPath:[UIBezierPath bezierPathWithRect:self.frame]];
+    [path appendPath:[UIBezierPath bezierPathWithRect:centerFrame].bezierPathByReversingPath];
+    CAShapeLayer *maskLayer = [CAShapeLayer layer];
+    maskLayer.path = path.CGPath;
+    self.layer.mask = maskLayer;
+
+}
+
 @end

@@ -15,26 +15,35 @@
 @interface ViewController ()<UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIActionSheetDelegate, STPhotoKitDelegate>
 
 /** 1.头像图片 */
-@property (nullable, nonatomic, strong) UIImageView *imageHead;
+@property (nonatomic, strong) UIImageView *imageHead;
+/** 2.获取的原图 */
+@property (nonatomic, strong) UIImageView *imageSource;
+/** 3.修剪后的图 */
+@property (nonatomic, strong) UIImageView *imageCrop;
 @end
 
 @implementation ViewController
 
 #pragma mark - --- lift cycle 生命周期 ---
 - (void)viewDidLoad {
+
     [super viewDidLoad];
-
     [self.view addSubview:self.imageHead];
-
-
+    [self.view addSubview:self.imageSource];
+    [self.view addSubview:self.imageCrop];
 }
 #pragma mark - --- delegate 视图委托 ---
 
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    [self editImageSelected];
+}
 
 #pragma mark - 1.STPhotoKitDelegate的委托
 
 - (void)photoKitController:(STPhotoKitController *)photoKitController resultImage:(UIImage *)resultImage
 {
+    [self.imageCrop setImage:resultImage];
     self.imageHead.image = resultImage;
 }
 
@@ -44,11 +53,10 @@
 {
     [picker dismissViewControllerAnimated:YES completion:^{
         UIImage *imageOriginal = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
+        [self.imageSource setImage:imageOriginal];
         imageOriginal = [UIImage imageByScalingToMaxSize:imageOriginal];
         STPhotoKitController *imageCropperVC = [[STPhotoKitController alloc]init];
         imageCropperVC.imageOriginal = imageOriginal;
-        imageCropperVC.cropFrame = CGRectMake(0, 100, ScreenWidth, ScreenWidth);
-        imageCropperVC.limitRatio = 3.0;
         imageCropperVC.delegate = self;
         [self presentViewController:imageCropperVC animated:YES completion:nil];
     }];
@@ -129,12 +137,12 @@
 - (UIImageView *)imageHead
 {
     if (!_imageHead) {
-        CGFloat imageW = 100;
-        CGFloat imageH =imageW;
-        CGFloat imageX = 100;
-        CGFloat imageY = 300;
+        CGFloat imageW = 50;
+        CGFloat imageH = imageW;
+        CGFloat imageX = 0;
+        CGFloat imageY = 260;
         _imageHead = [[UIImageView alloc]initWithFrame:CGRectMake(imageX, imageY, imageW, imageH)];
-
+        [_imageHead setCenterX:ScreenWidth/2];
         [_imageHead.layer setCornerRadius:imageW/2];
         [_imageHead.layer setMasksToBounds:YES];
         [_imageHead.layer setBorderColor:[UIColor orangeColor].CGColor];
@@ -143,12 +151,48 @@
         [_imageHead setContentMode:UIViewContentModeScaleAspectFill];
         [_imageHead setBackgroundColor:[UIColor whiteColor]];
         [_imageHead setUserInteractionEnabled:YES];
-
-        UITapGestureRecognizer *imageTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(editImageSelected)];
-        [_imageHead addGestureRecognizer:imageTap];
         
     }
     return _imageHead;
 }
+
+- (UIImageView *)imageSource
+{
+    if (!_imageSource) {
+        CGFloat imageW = 100;
+        CGFloat imageH = imageW;
+        CGFloat imageX = 0;
+        CGFloat imageY = 20;
+        _imageSource = [[UIImageView alloc]initWithFrame:CGRectMake(imageX, imageY, imageW, imageH)];
+        [_imageSource setCenterX:ScreenWidth/2];
+        [_imageSource.layer setBorderColor:[UIColor blueColor].CGColor];
+        [_imageSource.layer setBorderWidth:0.5];
+        [_imageSource setContentMode:UIViewContentModeScaleAspectFit];
+
+    }
+    return _imageSource;
+
+}
+
+- (UIImageView *)imageCrop
+{
+    if (!_imageCrop) {
+        CGFloat imageW = 100;
+        CGFloat imageH = imageW;
+        CGFloat imageX = 0;
+        CGFloat imageY = 140;
+        _imageCrop = [[UIImageView alloc]initWithFrame:CGRectMake(imageX, imageY, imageW, imageH)];
+         [_imageCrop setCenterX:ScreenWidth/2];
+        [_imageCrop.layer setBorderColor:[UIColor blueColor].CGColor];
+        [_imageCrop.layer setBorderWidth:0.5];
+        [_imageCrop setContentMode:UIViewContentModeScaleAspectFit];
+
+
+    }
+    return _imageCrop;
+    
+}
+
+
 
 @end
