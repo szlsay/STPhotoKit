@@ -13,6 +13,12 @@
 		670621041C7FDC9E004B9205 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 670621021C7FDC9E004B9205 /* Main.storyboard */; };
 		670621061C7FDC9E004B9205 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 670621051C7FDC9E004B9205 /* Assets.xcassets */; };
 		670621091C7FDC9E004B9205 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 670621071C7FDC9E004B9205 /* LaunchScreen.storyboard */; };
+		670621191C7FDE68004B9205 /* STConst.m in Sources */ = {isa = PBXBuildFile; fileRef = 670621141C7FDE68004B9205 /* STConst.m */; };
+		6706211A1C7FDE68004B9205 /* STUI.m in Sources */ = {isa = PBXBuildFile; fileRef = 670621161C7FDE68004B9205 /* STUI.m */; };
+		6706211B1C7FDE68004B9205 /* UIView+ST.m in Sources */ = {isa = PBXBuildFile; fileRef = 670621181C7FDE68004B9205 /* UIView+ST.m */; };
+		670621211C7FDF1F004B9205 /* UIImage+ST.m in Sources */ = {isa = PBXBuildFile; fileRef = 6706211F1C7FDF1F004B9205 /* UIImage+ST.m */; };
+		670621241C7FE057004B9205 /* UIViewController+ST.m in Sources */ = {isa = PBXBuildFile; fileRef = 670621231C7FE057004B9205 /* UIViewController+ST.m */; };
+		670621281C7FE2CF004B9205 /* STPhotoKitController.m in Sources */ = {isa = PBXBuildFile; fileRef = 670621271C7FE2CF004B9205 /* STPhotoKitController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +32,19 @@
 		670621051C7FDC9E004B9205 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		670621081C7FDC9E004B9205 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6706210A1C7FDC9E004B9205 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		670621121C7FDE68004B9205 /* STConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STConfig.h; sourceTree = "<group>"; };
+		670621131C7FDE68004B9205 /* STConst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STConst.h; sourceTree = "<group>"; };
+		670621141C7FDE68004B9205 /* STConst.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STConst.m; sourceTree = "<group>"; };
+		670621151C7FDE68004B9205 /* STUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STUI.h; sourceTree = "<group>"; };
+		670621161C7FDE68004B9205 /* STUI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STUI.m; sourceTree = "<group>"; };
+		670621171C7FDE68004B9205 /* UIView+ST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+ST.h"; sourceTree = "<group>"; };
+		670621181C7FDE68004B9205 /* UIView+ST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+ST.m"; sourceTree = "<group>"; };
+		6706211E1C7FDF1F004B9205 /* UIImage+ST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ST.h"; sourceTree = "<group>"; };
+		6706211F1C7FDF1F004B9205 /* UIImage+ST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ST.m"; sourceTree = "<group>"; };
+		670621221C7FE056004B9205 /* UIViewController+ST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+ST.h"; sourceTree = "<group>"; };
+		670621231C7FE057004B9205 /* UIViewController+ST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+ST.m"; sourceTree = "<group>"; };
+		670621261C7FE2CF004B9205 /* STPhotoKitController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPhotoKitController.h; sourceTree = "<group>"; };
+		670621271C7FE2CF004B9205 /* STPhotoKitController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPhotoKitController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +77,8 @@
 		670620F81C7FDC9E004B9205 /* STPhotoKit */ = {
 			isa = PBXGroup;
 			children = (
+				670621251C7FE298004B9205 /* STPhotoKit */,
+				670621111C7FDE32004B9205 /* STConfig */,
 				670620FC1C7FDC9E004B9205 /* AppDelegate.h */,
 				670620FD1C7FDC9E004B9205 /* AppDelegate.m */,
 				670620FF1C7FDC9E004B9205 /* ViewController.h */,
@@ -77,6 +98,33 @@
 				670620FA1C7FDC9E004B9205 /* main.m */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		670621111C7FDE32004B9205 /* STConfig */ = {
+			isa = PBXGroup;
+			children = (
+				670621121C7FDE68004B9205 /* STConfig.h */,
+				670621131C7FDE68004B9205 /* STConst.h */,
+				670621141C7FDE68004B9205 /* STConst.m */,
+				670621151C7FDE68004B9205 /* STUI.h */,
+				670621161C7FDE68004B9205 /* STUI.m */,
+				670621171C7FDE68004B9205 /* UIView+ST.h */,
+				670621181C7FDE68004B9205 /* UIView+ST.m */,
+				670621221C7FE056004B9205 /* UIViewController+ST.h */,
+				670621231C7FE057004B9205 /* UIViewController+ST.m */,
+				6706211E1C7FDF1F004B9205 /* UIImage+ST.h */,
+				6706211F1C7FDF1F004B9205 /* UIImage+ST.m */,
+			);
+			path = STConfig;
+			sourceTree = "<group>";
+		};
+		670621251C7FE298004B9205 /* STPhotoKit */ = {
+			isa = PBXGroup;
+			children = (
+				670621261C7FE2CF004B9205 /* STPhotoKitController.h */,
+				670621271C7FE2CF004B9205 /* STPhotoKitController.m */,
+			);
+			path = STPhotoKit;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -150,8 +198,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6706211A1C7FDE68004B9205 /* STUI.m in Sources */,
+				670621281C7FE2CF004B9205 /* STPhotoKitController.m in Sources */,
+				6706211B1C7FDE68004B9205 /* UIView+ST.m in Sources */,
+				670621211C7FDF1F004B9205 /* UIImage+ST.m in Sources */,
 				670621011C7FDC9E004B9205 /* ViewController.m in Sources */,
 				670620FE1C7FDC9E004B9205 /* AppDelegate.m in Sources */,
+				670621241C7FE057004B9205 /* UIViewController+ST.m in Sources */,
+				670621191C7FDE68004B9205 /* STConst.m in Sources */,
 				670620FB1C7FDC9E004B9205 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
