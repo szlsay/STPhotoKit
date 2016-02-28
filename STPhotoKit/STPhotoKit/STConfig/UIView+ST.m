@@ -199,8 +199,6 @@
 {
     UIBezierPath *path = [UIBezierPath bezierPath];
     [path appendPath:[UIBezierPath bezierPathWithRect:self.frame]];
-//    NSLog(@"%s %@", __FUNCTION__, NSStringFromCGRect(self.frame));
-//    NSLog(@"%s %@", __FUNCTION__, NSStringFromCGRect(centerFrame));
     [path appendPath:[UIBezierPath bezierPathWithRect:centerFrame].bezierPathByReversingPath];
     CAShapeLayer *maskLayer = [CAShapeLayer layer];
     maskLayer.path = path.CGPath;

@@ -88,19 +88,19 @@ typedef NS_ENUM(NSInteger, PhotoType)
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
 {
     [picker dismissViewControllerAnimated:YES completion:^{
-        UIImage *imageOriginal = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
+        UIImage *imageOriginal = [info objectForKey:UIImagePickerControllerOriginalImage];
         STPhotoKitController *photoVC = [STPhotoKitController new];
         [photoVC setDelegate:self];
         [photoVC setImageOriginal:imageOriginal];
         switch (self.type) {
             case PhotoTypeIcon:
-//                [photoVC setRectClip:CGRectMake(100, 200, 50, 50)];
+                [photoVC setSizeClip:CGSizeMake(self.imageIcon.width*2, self.imageIcon.height*2)];
                 break;
             case PhotoTypeRectangle:
-//                 [photoVC setRectClip:CGRectMake(100, 200, 100, 50)];
+                [photoVC setSizeClip:CGSizeMake(self.imageRectangle.width*2, self.imageRectangle.height*2)];
                 break;
             case PhotoTypeRectangle1:
-//                 [photoVC setRectClip:CGRectMake(100, 200, 50, 100)];
+                [photoVC setSizeClip:CGSizeMake(self.imageRectangle1.width*2, self.imageRectangle1.height*2)];
                 break;
             default:
                 break;

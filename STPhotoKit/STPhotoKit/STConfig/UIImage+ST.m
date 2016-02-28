@@ -7,88 +7,8 @@
 //
 
 #import "UIImage+ST.h"
-#import "STConst.h"
 
 @implementation UIImage (ST)
-+ (UIImage *)imageByScalingToMaxSize:(UIImage *)sourceImage {
-
-    CGFloat maxWidth = ScreenWidth * 2;
-    if (sourceImage.size.width < maxWidth) return sourceImage;
-
-    CGFloat btWidth = 0.0f;
-    CGFloat btHeight = 0.0f;
-    if (sourceImage.size.width > sourceImage.size.height) {
-        btHeight = maxWidth;
-        btWidth = sourceImage.size.width * (maxWidth / sourceImage.size.height);
-    } else {
-        btWidth = maxWidth;
-        btHeight = sourceImage.size.height * (maxWidth / sourceImage.size.width);
-    }
-    CGSize targetSize = CGSizeMake(btWidth, btHeight);
-    return  [self imageWithSourceImage:sourceImage scaleSize:targetSize];
-//    return [self imageCroppingForSourceImage:sourceImage targetSize:targetSize];
-}
-
-
-//
-//+ (UIImage *)imageCroppingForSourceImage:(UIImage *)sourceImage  targetSize:(CGSize)targetSize
-//{
-//
-//    UIImage *newImage;
-//
-//    CGSize imageSize = sourceImage.size;
-//    CGFloat width = imageSize.width;
-//    CGFloat height = imageSize.height;
-//    CGFloat targetWidth = targetSize.width;
-//    CGFloat targetHeight = targetSize.height;
-//
-//    CGFloat scaleFactor = 0.0;
-//    CGFloat scaledWidth = targetWidth;
-//    CGFloat scaledHeight = targetHeight;
-//    CGPoint thumbnailPoint = CGPointMake(0.0,0.0);
-//
-//    if (CGSizeEqualToSize(imageSize, targetSize) == NO)
-//    {
-//        CGFloat widthFactor = targetWidth / width;
-//        CGFloat heightFactor = targetHeight / height;
-//
-//        if (widthFactor > heightFactor)
-//            scaleFactor = widthFactor; // scale to fit height
-//        else
-//            scaleFactor = heightFactor; // scale to fit width
-//
-//        scaledWidth  = width * scaleFactor;
-//        scaledHeight = height * scaleFactor;
-//
-//        // center the image
-//        if (widthFactor > heightFactor)
-//        {
-//            thumbnailPoint.y = (targetHeight - scaledHeight) * 0.5;
-//        }
-//        else
-//            if (widthFactor < heightFactor)
-//            {
-//                thumbnailPoint.x = (targetWidth - scaledWidth) * 0.5;
-//            }
-//    }
-//    UIGraphicsBeginImageContext(targetSize); // this will crop
-//    CGRect thumbnailRect = CGRectZero;
-//    thumbnailRect.origin = thumbnailPoint;
-//    thumbnailRect.size.width  = scaledWidth;
-//    thumbnailRect.size.height = scaledHeight;
-//
-//    [sourceImage drawInRect:thumbnailRect];
-//
-//    newImage = UIGraphicsGetImageFromCurrentImageContext();
-//    if(newImage == nil) NSLog(@"could not scale image");
-//
-//    //pop the context to get back to the default
-//    UIGraphicsEndImageContext();
-//    return newImage;
-//}
-
-
-
 /**
  *  绘制图片圆角
  *
@@ -186,5 +106,22 @@
     // 返回新的改变大小后的图片
     return scaledImage;
 }
+
+/**
+ *  截取指定位置的图片
+ *
+ *  @param bounds <#bounds description#>
+ *
+ *  @return <#return value description#>
+ */
+- (UIImage *)croppedImage:(CGRect)bounds {
+    CGFloat scale = MAX(self.scale, 1.0f);
+    CGRect scaledBounds = CGRectMake(bounds.origin.x * scale, bounds.origin.y * scale, bounds.size.width * scale, bounds.size.height * scale);
+    CGImageRef imageRef = CGImageCreateWithImageInRect([self CGImage], scaledBounds);
+    UIImage *croppedImage = [UIImage imageWithCGImage:imageRef scale:self.scale orientation:UIImageOrientationUp];
+    CGImageRelease(imageRef);
+    return croppedImage;
+}
+
 
 @end

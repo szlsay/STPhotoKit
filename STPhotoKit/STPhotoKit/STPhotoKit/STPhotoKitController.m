@@ -22,7 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIView *viewOverlay;
 /** 5.图片返回初始状态 */
 @property (nonatomic, strong) UIButton *buttonBack;
-
+/** 6.修剪的位置 */
+@property (nonatomic, assign) CGRect rectClip;
 
 @end
 
@@ -36,11 +37,7 @@ NS_ASSUME_NONNULL_END
 {
     self = [super init];
     if (self) {
-        CGFloat clipW = ScreenWidth;
-        CGFloat clipH = clipW;
-        CGFloat clipX = 0;
-        CGFloat clipY = (ScreenHeight - ScreenWidth)/2;
-        _rectClip = CGRectMake(clipX, clipY, clipW, clipH);
+        self.sizeClip = CGSizeMake(ScreenWidth, ScreenWidth);
     }
     return self;
 }
@@ -59,10 +56,7 @@ NS_ASSUME_NONNULL_END
 }
 
 #pragma mark - --- delegate 视图委托 ---
-//- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-//{
-//    [self.viewOverlay setHollowWithCenterFrame:CGRectMake(50, 10, 100, 500)];
-//}
+
 #pragma mark - --- event response 事件相应 ---
 /**
  *  1.取消操作
@@ -162,8 +156,7 @@ NS_ASSUME_NONNULL_END
 {
 
     UIImage *image = [self.view imageFromSelfView];
-
-    return [UIImage imageWithSourceImage:image clipRect:self.rectClip];
+    return [image croppedImage:self.rectClip];
 }
 
 #pragma mark - --- getters and setters 属性 ---
@@ -174,9 +167,14 @@ NS_ASSUME_NONNULL_END
     self.imageView.image = imageOriginal;
 }
 
-- (void)setRectClip:(CGRect)rectClip
+- (void)setSizeClip:(CGSize)sizeClip
 {
-    _rectClip = rectClip;
+    _sizeClip = sizeClip;
+    CGFloat clipW = sizeClip.width;
+    CGFloat clipH = sizeClip.height;
+    CGFloat clipX = (ScreenWidth - clipW)/2;
+    CGFloat clipY = (ScreenHeight - clipH)/2;
+    _rectClip = CGRectMake(clipX, clipY, clipW, clipH);
 }
 
 /** 1.图片 */

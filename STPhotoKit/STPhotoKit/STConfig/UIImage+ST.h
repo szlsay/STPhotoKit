@@ -9,10 +9,15 @@
 #import <UIKit/UIKit.h>
 
 @interface UIImage (ST)
-
-+ (UIImage *)imageByScalingToMaxSize:(UIImage *)sourceImage;
-+ (UIImage *)imageWithClipImage:(UIImage *)image
-                          frame:(CGRect)frame;
+/**
+ *  获取圆角图片
+ *
+ *  @param image       <#image description#>
+ *  @param borderWidth <#borderWidth description#>
+ *  @param color       <#color description#>
+ *
+ *  @return <#return value description#>
+ */
 
 + (UIImage *)imageWithClipImage:(UIImage *)image borderWidth:(CGFloat)borderWidth borderColor:(UIColor *)color;
 
@@ -26,4 +31,13 @@
  */
 + (UIImage *)imageWithSourceImage:(UIImage *)sourceImage
                          clipRect:(CGRect)clipRect;
+
+/**
+ *  截取指定位置的图片
+ *
+ *  @param bounds <#bounds description#>
+ *
+ *  @return <#return value description#>
+ */
+- (UIImage *)croppedImage:(CGRect)bounds;
 @end
