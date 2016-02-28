@@ -75,7 +75,10 @@
  *  @param centerFrame 中间镂空的框架
  */
 - (void)setHollowWithCenterFrame:(CGRect)centerFrame;
-
-
+/**
+ *  14.获取屏幕图片
+ *  @return <#return value description#>
+ */
+- (UIImage *)imageFromSelfView;
 @end
 

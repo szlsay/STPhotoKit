@@ -10,16 +10,24 @@
 
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "STPhotoKitController.h"
+#import "UIImagePickerController+ST.h"
 #import "STConfig.h"
 
-@interface ViewController ()<UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIActionSheetDelegate, STPhotoKitDelegate>
+typedef NS_ENUM(NSInteger, PhotoType)
+{
+    PhotoTypeIcon,
+    PhotoTypeRectangle,
+    PhotoTypeRectangle1
+};
 
-/** 1.头像图片 */
-@property (nonatomic, strong) UIImageView *imageHead;
-/** 2.获取的原图 */
-@property (nonatomic, strong) UIImageView *imageSource;
-/** 3.修剪后的图 */
-@property (nonatomic, strong) UIImageView *imageCrop;
+@interface ViewController ()<UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIActionSheetDelegate, STPhotoKitDelegate>
+@property (weak, nonatomic) IBOutlet UIImageView *imageIcon;
+@property (weak, nonatomic) IBOutlet UIImageView *imageRectangle;
+@property (weak, nonatomic) IBOutlet UIImageView *imageRectangle1;
+
+@property (nonatomic, assign) PhotoType type;
+
+
 @end
 
 @implementation ViewController
@@ -28,23 +36,51 @@
 - (void)viewDidLoad {
 
     [super viewDidLoad];
-    [self.view addSubview:self.imageHead];
-    [self.view addSubview:self.imageSource];
-    [self.view addSubview:self.imageCrop];
-}
-#pragma mark - --- delegate 视图委托 ---
 
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+    UITapGestureRecognizer *tap0 = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(selectedIcon)];
+    [self.imageIcon addGestureRecognizer:tap0];
+
+    UITapGestureRecognizer *tap1 = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(selectedRectangle)];
+    [self.imageRectangle addGestureRecognizer:tap1];
+
+    UITapGestureRecognizer *tap2 = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(selectedRectangle1)];
+    [self.imageRectangle1 addGestureRecognizer:tap2];
+}
+
+- (void)selectedIcon
 {
+    self.type = PhotoTypeIcon;
     [self editImageSelected];
 }
+
+- (void)selectedRectangle{
+    self.type = PhotoTypeRectangle;
+    [self editImageSelected];
+}
+
+- (void)selectedRectangle1{
+    self.type = PhotoTypeRectangle1;
+    [self editImageSelected];
+}
+#pragma mark - --- delegate 视图委托 ---
 
 #pragma mark - 1.STPhotoKitDelegate的委托
 
 - (void)photoKitController:(STPhotoKitController *)photoKitController resultImage:(UIImage *)resultImage
 {
-    [self.imageCrop setImage:resultImage];
-    self.imageHead.image = resultImage;
+    switch (self.type) {
+        case PhotoTypeIcon:
+            self.imageIcon.image = resultImage;
+            break;
+        case PhotoTypeRectangle:
+            self.imageRectangle.image = resultImage;
+            break;
+        case PhotoTypeRectangle1:
+            self.imageRectangle1.image = resultImage;
+            break;
+        default:
+            break;
+    }
 }
 
 #pragma mark - 2.UIImagePickerController的委托
@@ -53,12 +89,25 @@
 {
     [picker dismissViewControllerAnimated:YES completion:^{
         UIImage *imageOriginal = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
-        [self.imageSource setImage:imageOriginal];
-        imageOriginal = [UIImage imageByScalingToMaxSize:imageOriginal];
-        STPhotoKitController *imageCropperVC = [[STPhotoKitController alloc]init];
-        imageCropperVC.imageOriginal = imageOriginal;
-        imageCropperVC.delegate = self;
-        [self presentViewController:imageCropperVC animated:YES completion:nil];
+        STPhotoKitController *photoVC = [STPhotoKitController new];
+        [photoVC setDelegate:self];
+        [photoVC setImageOriginal:imageOriginal];
+        switch (self.type) {
+            case PhotoTypeIcon:
+//                [photoVC setRectClip:CGRectMake(100, 200, 50, 50)];
+                break;
+            case PhotoTypeRectangle:
+//                 [photoVC setRectClip:CGRectMake(100, 200, 100, 50)];
+                break;
+            case PhotoTypeRectangle1:
+//                 [photoVC setRectClip:CGRectMake(100, 200, 50, 100)];
+                break;
+            default:
+                break;
+        }
+
+
+        [self presentViewController:photoVC animated:YES completion:nil];
     }];
 }
 
@@ -67,23 +116,30 @@
     }];
 }
 
-
 #pragma mark - --- event response 事件相应 ---
 - (void)editImageSelected
 {
     UIAlertController *alertController = [[UIAlertController alloc]init];
 
     UIAlertAction *action0 = [UIAlertAction actionWithTitle:@"拍照" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        [self takePicture];
+        UIImagePickerController *controller = [UIImagePickerController imagePickerControllerWithSourceType:UIImagePickerControllerSourceTypeCamera];
+
+        if ([controller isAvailableCamera] && [controller isSupportTakingPhotos]) {
+            [controller setDelegate:self];
+            [self presentViewController:controller animated:YES completion:nil];
+        }else {
+            NSLog(@"%s %@", __FUNCTION__, @"相机权限受限");
+        }
     }];
 
     UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"从相册获取" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        NSLog(@"%s %@", __FUNCTION__, action.title);
-        [self photoAlbum];
-    }];
+        UIImagePickerController *controller = [UIImagePickerController imagePickerControllerWithSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+        [controller setDelegate:self];
+        if ([controller isAvailablePhotoLibrary]) {
+            [self presentViewController:controller animated:YES completion:nil];
+        }    }];
 
     UIAlertAction *action2 = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
-        NSLog(@"%s %@", __FUNCTION__, action.title);
     }];
 
     [alertController addAction:action0];
@@ -92,107 +148,7 @@
 
     [self presentViewController:alertController animated:YES completion:nil];
 }
-
-- (void)takePicture
-{
-    // 拍照
-    if ([self isAvailableCamera] && [self canCameraSupportTakingPhotos]) {
-        UIImagePickerController *controller = [[UIImagePickerController alloc] init];
-        controller.sourceType = UIImagePickerControllerSourceTypeCamera;
-        if ([self isAvailableFrontCamera]) {
-            controller.cameraDevice = UIImagePickerControllerCameraDeviceFront;
-        }
-        NSMutableArray *mediaTypes = [[NSMutableArray alloc] init];
-        [mediaTypes addObject:(__bridge NSString *)kUTTypeImage];
-        controller.mediaTypes = mediaTypes;
-        controller.delegate = self;
-        [self presentViewController:controller
-                           animated:YES
-                         completion:^(void){
-                         }];
-    }
-
-}
-
-- (void)photoAlbum{
-    // 从相册中选取
-    if ([self isAvailablePhotoLibrary]) {
-        UIImagePickerController *controller = [[UIImagePickerController alloc] init];
-        controller.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-        NSMutableArray *mediaTypes = [[NSMutableArray alloc] init];
-        [mediaTypes addObject:(__bridge NSString *)kUTTypeImage];
-        controller.mediaTypes = mediaTypes;
-        controller.delegate = self;
-        [self presentViewController:controller
-                           animated:YES
-                         completion:^(void){
-                         }];
-    }
-
-}
 #pragma mark - --- private methods 私有方法 ---
 
 #pragma mark - --- getters and setters 属性 ---
-
-- (UIImageView *)imageHead
-{
-    if (!_imageHead) {
-        CGFloat imageW = 50;
-        CGFloat imageH = imageW;
-        CGFloat imageX = 0;
-        CGFloat imageY = 260;
-        _imageHead = [[UIImageView alloc]initWithFrame:CGRectMake(imageX, imageY, imageW, imageH)];
-        [_imageHead setCenterX:ScreenWidth/2];
-        [_imageHead.layer setCornerRadius:imageW/2];
-        [_imageHead.layer setMasksToBounds:YES];
-        [_imageHead.layer setBorderColor:[UIColor orangeColor].CGColor];
-        [_imageHead.layer setBorderWidth:0.5];
-
-        [_imageHead setContentMode:UIViewContentModeScaleAspectFill];
-        [_imageHead setBackgroundColor:[UIColor whiteColor]];
-        [_imageHead setUserInteractionEnabled:YES];
-        
-    }
-    return _imageHead;
-}
-
-- (UIImageView *)imageSource
-{
-    if (!_imageSource) {
-        CGFloat imageW = 100;
-        CGFloat imageH = imageW;
-        CGFloat imageX = 0;
-        CGFloat imageY = 20;
-        _imageSource = [[UIImageView alloc]initWithFrame:CGRectMake(imageX, imageY, imageW, imageH)];
-        [_imageSource setCenterX:ScreenWidth/2];
-        [_imageSource.layer setBorderColor:[UIColor blueColor].CGColor];
-        [_imageSource.layer setBorderWidth:0.5];
-        [_imageSource setContentMode:UIViewContentModeScaleAspectFit];
-
-    }
-    return _imageSource;
-
-}
-
-- (UIImageView *)imageCrop
-{
-    if (!_imageCrop) {
-        CGFloat imageW = 100;
-        CGFloat imageH = imageW;
-        CGFloat imageX = 0;
-        CGFloat imageY = 140;
-        _imageCrop = [[UIImageView alloc]initWithFrame:CGRectMake(imageX, imageY, imageW, imageH)];
-         [_imageCrop setCenterX:ScreenWidth/2];
-        [_imageCrop.layer setBorderColor:[UIColor blueColor].CGColor];
-        [_imageCrop.layer setBorderWidth:0.5];
-        [_imageCrop setContentMode:UIViewContentModeScaleAspectFit];
-
-
-    }
-    return _imageCrop;
-    
-}
-
-
-
 @end

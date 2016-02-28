@@ -13,8 +13,6 @@
 #import "STUI.h"
 
 #import "UIView+ST.h"
-#import "UIViewController+ST.h"
 #import "UIImage+ST.h"
-
 
 #endif /* STConfig_h */

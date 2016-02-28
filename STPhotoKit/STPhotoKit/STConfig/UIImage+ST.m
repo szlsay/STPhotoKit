@@ -25,94 +25,80 @@
         btHeight = sourceImage.size.height * (maxWidth / sourceImage.size.width);
     }
     CGSize targetSize = CGSizeMake(btWidth, btHeight);
-    return [self imageCroppingForSourceImage:sourceImage targetSize:targetSize];
+    return  [self imageWithSourceImage:sourceImage scaleSize:targetSize];
+//    return [self imageCroppingForSourceImage:sourceImage targetSize:targetSize];
 }
 
 
+//
+//+ (UIImage *)imageCroppingForSourceImage:(UIImage *)sourceImage  targetSize:(CGSize)targetSize
+//{
+//
+//    UIImage *newImage;
+//
+//    CGSize imageSize = sourceImage.size;
+//    CGFloat width = imageSize.width;
+//    CGFloat height = imageSize.height;
+//    CGFloat targetWidth = targetSize.width;
+//    CGFloat targetHeight = targetSize.height;
+//
+//    CGFloat scaleFactor = 0.0;
+//    CGFloat scaledWidth = targetWidth;
+//    CGFloat scaledHeight = targetHeight;
+//    CGPoint thumbnailPoint = CGPointMake(0.0,0.0);
+//
+//    if (CGSizeEqualToSize(imageSize, targetSize) == NO)
+//    {
+//        CGFloat widthFactor = targetWidth / width;
+//        CGFloat heightFactor = targetHeight / height;
+//
+//        if (widthFactor > heightFactor)
+//            scaleFactor = widthFactor; // scale to fit height
+//        else
+//            scaleFactor = heightFactor; // scale to fit width
+//
+//        scaledWidth  = width * scaleFactor;
+//        scaledHeight = height * scaleFactor;
+//
+//        // center the image
+//        if (widthFactor > heightFactor)
+//        {
+//            thumbnailPoint.y = (targetHeight - scaledHeight) * 0.5;
+//        }
+//        else
+//            if (widthFactor < heightFactor)
+//            {
+//                thumbnailPoint.x = (targetWidth - scaledWidth) * 0.5;
+//            }
+//    }
+//    UIGraphicsBeginImageContext(targetSize); // this will crop
+//    CGRect thumbnailRect = CGRectZero;
+//    thumbnailRect.origin = thumbnailPoint;
+//    thumbnailRect.size.width  = scaledWidth;
+//    thumbnailRect.size.height = scaledHeight;
+//
+//    [sourceImage drawInRect:thumbnailRect];
+//
+//    newImage = UIGraphicsGetImageFromCurrentImageContext();
+//    if(newImage == nil) NSLog(@"could not scale image");
+//
+//    //pop the context to get back to the default
+//    UIGraphicsEndImageContext();
+//    return newImage;
+//}
 
-+ (UIImage *)imageCroppingForSourceImage:(UIImage *)sourceImage  targetSize:(CGSize)targetSize
-{
-
-    UIImage *newImage;
-
-    CGSize imageSize = sourceImage.size;
-    CGFloat width = imageSize.width;
-    CGFloat height = imageSize.height;
-    CGFloat targetWidth = targetSize.width;
-    CGFloat targetHeight = targetSize.height;
-
-    CGFloat scaleFactor = 0.0;
-    CGFloat scaledWidth = targetWidth;
-    CGFloat scaledHeight = targetHeight;
-    CGPoint thumbnailPoint = CGPointMake(0.0,0.0);
-
-    if (CGSizeEqualToSize(imageSize, targetSize) == NO)
-    {
-        CGFloat widthFactor = targetWidth / width;
-        CGFloat heightFactor = targetHeight / height;
-
-        if (widthFactor > heightFactor)
-            scaleFactor = widthFactor; // scale to fit height
-        else
-            scaleFactor = heightFactor; // scale to fit width
-
-        scaledWidth  = width * scaleFactor;
-        scaledHeight = height * scaleFactor;
-
-        // center the image
-        if (widthFactor > heightFactor)
-        {
-            thumbnailPoint.y = (targetHeight - scaledHeight) * 0.5;
-        }
-        else
-            if (widthFactor < heightFactor)
-            {
-                thumbnailPoint.x = (targetWidth - scaledWidth) * 0.5;
-            }
-    }
-    UIGraphicsBeginImageContext(targetSize); // this will crop
-    CGRect thumbnailRect = CGRectZero;
-    thumbnailRect.origin = thumbnailPoint;
-    thumbnailRect.size.width  = scaledWidth;
-    thumbnailRect.size.height = scaledHeight;
-
-    [sourceImage drawInRect:thumbnailRect];
-
-    newImage = UIGraphicsGetImageFromCurrentImageContext();
-    if(newImage == nil) NSLog(@"could not scale image");
-
-    //pop the context to get back to the default
-    UIGraphicsEndImageContext();
-    return newImage;
-}
 
 
-//获得屏幕图像
-- (UIImage *)imageFromView: (UIView *) theView
-{
+/**
+ *  绘制图片圆角
+ *
+ *  @param image       <#image description#>
+ *  @param borderWidth <#borderWidth description#>
+ *  @param color       <#color description#>
+ *
+ *  @return <#return value description#>
+ */
 
-    UIGraphicsBeginImageContext(theView.frame.size);
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    [theView.layer renderInContext:context];
-    UIImage *theImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-
-    return theImage;
-}
-
-//获得某个范围内的屏幕图像
-- (UIImage *)imageFromView: (UIView *) theView   atFrame:(CGRect)r
-{
-    UIGraphicsBeginImageContext(theView.frame.size);
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextSaveGState(context);
-    UIRectClip(r);
-    [theView.layer renderInContext:context];
-    UIImage *theImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-
-    return  theImage;//[self getImageAreaFromImage:theImage atFrame:r];
-}
 
 + (UIImage *)imageWithClipImage:(UIImage *)image borderWidth:(CGFloat)borderWidth borderColor:(UIColor *)color
 {
@@ -149,6 +135,56 @@
     UIGraphicsEndImageContext();
 
     return clipImage;
-
 }
+
+/**
+ *  指定区域图片的截图
+ *
+ *  @param sourceImage 原始图片
+ *  @param clipRect    截取范围
+ *
+ *  @return 截图图片
+ */
++ (UIImage *)imageWithSourceImage:(UIImage *)sourceImage
+                          clipRect:(CGRect)clipRect
+{
+    CGImageRef imageRef = sourceImage.CGImage;
+    CGImageRef subImageRef = CGImageCreateWithImageInRect(imageRef, clipRect);
+    CGSize imageSize = clipRect.size;
+    UIGraphicsBeginImageContext(imageSize);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextDrawImage(context, clipRect, subImageRef);
+    UIImage *clipImage = [UIImage imageWithCGImage:subImageRef];
+    UIGraphicsEndImageContext();
+    return clipImage;
+}
+
+/**
+ *  指定图片的比例
+ *
+ *  @param sourceImage <#sourceImage description#>
+ *  @param scaleSize   <#scaleSize description#>
+ *
+ *  @return <#return value description#>
+ */
++ (UIImage *)imageWithSourceImage:(UIImage *)sourceImage
+                        scaleSize:(CGSize)scaleSize
+{
+    // 创建一个bitmap的context
+    // 并把它设置成为当前正在使用的context
+    UIGraphicsBeginImageContext(scaleSize);
+
+    // 绘制改变大小的图片
+    [sourceImage drawInRect:CGRectMake(0, 0, scaleSize.width, scaleSize.height)];
+
+    // 从当前context中创建一个改变大小后的图片
+    UIImage* scaledImage = UIGraphicsGetImageFromCurrentImageContext();
+
+    // 使当前的context出堆栈
+    UIGraphicsEndImageContext();
+
+    // 返回新的改变大小后的图片
+    return scaledImage;
+}
+
 @end

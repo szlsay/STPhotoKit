@@ -17,8 +17,8 @@
 		6706211A1C7FDE68004B9205 /* STUI.m in Sources */ = {isa = PBXBuildFile; fileRef = 670621161C7FDE68004B9205 /* STUI.m */; };
 		6706211B1C7FDE68004B9205 /* UIView+ST.m in Sources */ = {isa = PBXBuildFile; fileRef = 670621181C7FDE68004B9205 /* UIView+ST.m */; };
 		670621211C7FDF1F004B9205 /* UIImage+ST.m in Sources */ = {isa = PBXBuildFile; fileRef = 6706211F1C7FDF1F004B9205 /* UIImage+ST.m */; };
-		670621241C7FE057004B9205 /* UIViewController+ST.m in Sources */ = {isa = PBXBuildFile; fileRef = 670621231C7FE057004B9205 /* UIViewController+ST.m */; };
 		670621281C7FE2CF004B9205 /* STPhotoKitController.m in Sources */ = {isa = PBXBuildFile; fileRef = 670621271C7FE2CF004B9205 /* STPhotoKitController.m */; };
+		676467FD1C806AC900FD0FF6 /* UIImagePickerController+ST.m in Sources */ = {isa = PBXBuildFile; fileRef = 676467FC1C806AC900FD0FF6 /* UIImagePickerController+ST.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,10 +41,10 @@
 		670621181C7FDE68004B9205 /* UIView+ST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+ST.m"; sourceTree = "<group>"; };
 		6706211E1C7FDF1F004B9205 /* UIImage+ST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ST.h"; sourceTree = "<group>"; };
 		6706211F1C7FDF1F004B9205 /* UIImage+ST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ST.m"; sourceTree = "<group>"; };
-		670621221C7FE056004B9205 /* UIViewController+ST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+ST.h"; sourceTree = "<group>"; };
-		670621231C7FE057004B9205 /* UIViewController+ST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+ST.m"; sourceTree = "<group>"; };
 		670621261C7FE2CF004B9205 /* STPhotoKitController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPhotoKitController.h; sourceTree = "<group>"; };
 		670621271C7FE2CF004B9205 /* STPhotoKitController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPhotoKitController.m; sourceTree = "<group>"; };
+		676467FB1C806AC900FD0FF6 /* UIImagePickerController+ST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImagePickerController+ST.h"; sourceTree = "<group>"; };
+		676467FC1C806AC900FD0FF6 /* UIImagePickerController+ST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImagePickerController+ST.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,8 +110,6 @@
 				670621161C7FDE68004B9205 /* STUI.m */,
 				670621171C7FDE68004B9205 /* UIView+ST.h */,
 				670621181C7FDE68004B9205 /* UIView+ST.m */,
-				670621221C7FE056004B9205 /* UIViewController+ST.h */,
-				670621231C7FE057004B9205 /* UIViewController+ST.m */,
 				6706211E1C7FDF1F004B9205 /* UIImage+ST.h */,
 				6706211F1C7FDF1F004B9205 /* UIImage+ST.m */,
 			);
@@ -123,6 +121,8 @@
 			children = (
 				670621261C7FE2CF004B9205 /* STPhotoKitController.h */,
 				670621271C7FE2CF004B9205 /* STPhotoKitController.m */,
+				676467FB1C806AC900FD0FF6 /* UIImagePickerController+ST.h */,
+				676467FC1C806AC900FD0FF6 /* UIImagePickerController+ST.m */,
 			);
 			path = STPhotoKit;
 			sourceTree = "<group>";
@@ -200,11 +200,11 @@
 			files = (
 				6706211A1C7FDE68004B9205 /* STUI.m in Sources */,
 				670621281C7FE2CF004B9205 /* STPhotoKitController.m in Sources */,
+				676467FD1C806AC900FD0FF6 /* UIImagePickerController+ST.m in Sources */,
 				6706211B1C7FDE68004B9205 /* UIView+ST.m in Sources */,
 				670621211C7FDF1F004B9205 /* UIImage+ST.m in Sources */,
 				670621011C7FDC9E004B9205 /* ViewController.m in Sources */,
 				670620FE1C7FDC9E004B9205 /* AppDelegate.m in Sources */,
-				670621241C7FE057004B9205 /* UIViewController+ST.m in Sources */,
 				670621191C7FDE68004B9205 /* STConst.m in Sources */,
 				670620FB1C7FDC9E004B9205 /* main.m in Sources */,
 			);
@@ -355,6 +355,7 @@
 				6706210F1C7FDC9E004B9205 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

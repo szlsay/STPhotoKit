@@ -14,21 +14,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol STPhotoKitDelegate <NSObject>
 - (void)photoKitController:(STPhotoKitController *)photoKitController
-                   resultImage:(UIImage *)resultImage;
-
+               resultImage:(UIImage *)resultImage;
 
 @end
 
 @interface STPhotoKitController : UIViewController
 
+
 /** 1.原始图片, 必须设置*/
 @property (nonatomic, strong) UIImage *imageOriginal;
-/** 2.修剪的尺寸,默认是 CGSizeMake(ScreenWidth - STMarginBig, ScreenWidth - STMarginBig) */
-@property (nonatomic, assign) CGSize sizeCrop;
+
 
 @property (nullable, nonatomic, weak)id <STPhotoKitDelegate>delegate ;
 
-
+/** 剪切的范围 */
+@property (nonatomic, assign) CGRect rectClip;
 
 
 @end

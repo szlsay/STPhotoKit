@@ -20,10 +20,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIButton *buttonConfirm;
 /** 4.覆盖图 */
 @property (nonatomic, strong) UIView *viewOverlay;
-/** 5.中间比例视图 */
-@property (nonatomic, strong) UIView *viewRatio;
-/** 6.图片返回初始状态 */
+/** 5.图片返回初始状态 */
 @property (nonatomic, strong) UIButton *buttonBack;
+
+
 @end
 
 NS_ASSUME_NONNULL_END
@@ -36,24 +36,33 @@ NS_ASSUME_NONNULL_END
 {
     self = [super init];
     if (self) {
-        self.sizeCrop  = CGSizeMake(ScreenWidth - STMarginBig, ScreenWidth - STMarginBig);
+        CGFloat clipW = ScreenWidth;
+        CGFloat clipH = clipW;
+        CGFloat clipX = 0;
+        CGFloat clipY = (ScreenHeight - ScreenWidth)/2;
+        _rectClip = CGRectMake(clipX, clipY, clipW, clipH);
     }
     return self;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self.viewOverlay setHollowWithCenterFrame:self.rectClip];
+    [self.view setBackgroundColor:[UIColor blackColor]];
     [self.view addSubview:self.imageView];
     [self.view addSubview:self.viewOverlay];
-    [self.view addSubview:self.viewRatio];
     [self.view addSubview:self.buttonCancel];
     [self.view addSubview:self.buttonConfirm];
     [self.view addSubview:self.buttonBack];
-
     [self addGestureRecognizerToView:self.view];
-}
-#pragma mark - --- delegate 视图委托 ---
 
+}
+
+#pragma mark - --- delegate 视图委托 ---
+//- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+//{
+//    [self.viewOverlay setHollowWithCenterFrame:CGRectMake(50, 10, 100, 500)];
+//}
 #pragma mark - --- event response 事件相应 ---
 /**
  *  1.取消操作
@@ -68,9 +77,9 @@ NS_ASSUME_NONNULL_END
  */
 - (void)confirm
 {
-//    if ([self.delegate respondsToSelector:@selector(photoKitController:resultImage:)]) {
-//        [self.delegate photoKitController:self resultImage:[self getSubImage]];
-//    }
+    if ([self.delegate respondsToSelector:@selector(photoKitController:resultImage:)]) {
+        [self.delegate photoKitController:self resultImage:[self getResultImage]];
+    }
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -125,22 +134,9 @@ NS_ASSUME_NONNULL_END
     }
 }
 #pragma mark - --- private methods 私有方法 ---
-/**
- *  1.镂空中间的视图
- */
-- (void)setupHollowUI
-{
-    NSLog(@"%s %@", __FUNCTION__, NSStringFromCGRect(self.viewRatio.frame));
-    UIBezierPath *path = [UIBezierPath bezierPath];
-    [path appendPath:[UIBezierPath bezierPathWithRect:self.view.frame]];
-    [path appendPath:[UIBezierPath bezierPathWithRect:self.viewRatio.frame].bezierPathByReversingPath];
-    CAShapeLayer *maskLayer = [CAShapeLayer layer];
-    maskLayer.path = path.CGPath;
-    self.viewOverlay.layer.mask = maskLayer;
-}
 
 /**
- *  2.添加所有的手势
+ *  1.添加所有的手势
  */
 - (void) addGestureRecognizerToView:(UIView *)view
 {
@@ -157,40 +153,18 @@ NS_ASSUME_NONNULL_END
     [view addGestureRecognizer:panGestureRecognizer];
 }
 
-//-(UIImage *)getSubImage{
-//    CGRect squareFrame = self.cropFrame;
-//    CGFloat scaleRatio = self.latestFrame.size.width / self.imageOriginal.size.width;
-//    CGFloat x = (squareFrame.origin.x - self.latestFrame.origin.x) / scaleRatio;
-//    CGFloat y = (squareFrame.origin.y - self.latestFrame.origin.y) / scaleRatio;
-//    CGFloat w = squareFrame.size.width / scaleRatio;
-//    CGFloat h = squareFrame.size.width / scaleRatio;
-//    if (self.latestFrame.size.width < self.cropFrame.size.width) {
-//        CGFloat newW = self.imageOriginal.size.width;
-//        CGFloat newH = newW * (self.cropFrame.size.height / self.cropFrame.size.width);
-//        x = 0; y = y + (h - newH) / 2;
-//        w = newH; h = newH;
-//    }
-//    if (self.latestFrame.size.height < self.cropFrame.size.height) {
-//        CGFloat newH = self.imageOriginal.size.height;
-//        CGFloat newW = newH * (self.cropFrame.size.width / self.cropFrame.size.height);
-//        x = x + (w - newW) / 2; y = 0;
-//        w = newH; h = newH;
-//    }
-//    CGRect myImageRect = CGRectMake(x, y, w, h);
-//    CGImageRef imageRef = self.imageOriginal.CGImage;
-//    CGImageRef subImageRef = CGImageCreateWithImageInRect(imageRef, myImageRect);
-//    CGSize size;
-//    size.width = myImageRect.size.width;
-//    size.height = myImageRect.size.height;
-//    UIGraphicsBeginImageContext(size);
-//    CGContextRef context = UIGraphicsGetCurrentContext();
-//    CGContextDrawImage(context, myImageRect, subImageRef);
-//    UIImage* smallImage = [UIImage imageWithCGImage:subImageRef];
-//    UIGraphicsEndImageContext();
-//    return smallImage;
-//}
+/**
+ *  2.获取指定的图片
+ *
+ *  @return <#return value description#>
+ */
+- (UIImage *)getResultImage
+{
 
+    UIImage *image = [self.view imageFromSelfView];
 
+    return [UIImage imageWithSourceImage:image clipRect:self.rectClip];
+}
 
 #pragma mark - --- getters and setters 属性 ---
 
@@ -200,13 +174,9 @@ NS_ASSUME_NONNULL_END
     self.imageView.image = imageOriginal;
 }
 
-- (void)setSizeCrop:(CGSize)sizeCrop
+- (void)setRectClip:(CGRect)rectClip
 {
-    _sizeCrop = sizeCrop;
-
-    self.viewRatio.bounds = CGRectMake(0, 0, sizeCrop.width, sizeCrop.height);
-    self.viewRatio.center = self.view.center;
-    [self.viewOverlay setHollowWithCenterFrame:self.viewRatio.frame];
+    _rectClip = rectClip;
 }
 
 /** 1.图片 */
@@ -277,21 +247,11 @@ NS_ASSUME_NONNULL_END
         _viewOverlay = [[UIView alloc]initWithFrame:self.view.bounds];
         [_viewOverlay setBackgroundColor:[UIColor blackColor]];
         [_viewOverlay setAlpha:102.0/255];
+//        [_viewOverlay addSubview:self.viewRatio];
     }
     return _viewOverlay;
 }
-/** 5.中间比例视图 */
-- (UIView *)viewRatio
-{
-    if (!_viewRatio) {
-        _viewRatio = [[UIView alloc]init];
-        [_viewRatio.layer setBorderColor:[UIColor lightGrayColor].CGColor];
-        [_viewRatio.layer setBorderWidth:0.5];
-        [_viewRatio.layer setBorderColor:RGBA(255, 255, 255, 60.0/255).CGColor];
-    }
-    return _viewRatio;
-}
-/** 6.图片返回初始状态 */
+/** 5.图片返回初始状态 */
 - (UIButton *)buttonBack
 {
     if (!_buttonBack) {

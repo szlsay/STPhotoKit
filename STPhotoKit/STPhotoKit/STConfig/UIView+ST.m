@@ -199,11 +199,32 @@
 {
     UIBezierPath *path = [UIBezierPath bezierPath];
     [path appendPath:[UIBezierPath bezierPathWithRect:self.frame]];
+//    NSLog(@"%s %@", __FUNCTION__, NSStringFromCGRect(self.frame));
+//    NSLog(@"%s %@", __FUNCTION__, NSStringFromCGRect(centerFrame));
     [path appendPath:[UIBezierPath bezierPathWithRect:centerFrame].bezierPathByReversingPath];
     CAShapeLayer *maskLayer = [CAShapeLayer layer];
     maskLayer.path = path.CGPath;
     self.layer.mask = maskLayer;
+}
 
+/**
+ *  1.获取屏幕图片
+ */
+- (UIImage *)imageFromSelfView
+{
+    return [self imageFromViewWithFrame:self.frame];
+}
+
+- (UIImage *)imageFromViewWithFrame:(CGRect)frame
+{
+    UIGraphicsBeginImageContext(self.frame.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSaveGState(context);
+    UIRectClip(frame);
+    [self.layer renderInContext:context];
+    UIImage *theImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return  theImage;
 }
 
 @end
